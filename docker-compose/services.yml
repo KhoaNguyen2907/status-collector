@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  status-fetcher:
+    image: ${GROUP_ID}/status-fetcher:${STATUS_FETCHER_VERSION:-latest}
+    ports:
+      - "5005:5005"
+    volumes:
+      - "./docker-logs:/workspace/status-fetcher/logs"
+    environment:
+      - "KAFKA-CONFIG_TOPIC-NAME=status-topic"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092"
+      - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
+    depends_on:
+      - schema-registry
+    networks:
+      - ${GLOBAL_NETWORK:-services}

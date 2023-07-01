@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: status-fetcher
+  profiles:
+    active: status_fetcher
+  config:
+    import: configserver:http://localhost:8888/
+  cloud:
+    config:
+      name: status-fetcher,config-client
+
