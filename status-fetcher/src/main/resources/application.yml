@@ -8,4 +8,6 @@ spring:
   cloud:
     config:
       name: status-fetcher,config-client
+      username: devkhoa
+      password: devkhoa_password
 

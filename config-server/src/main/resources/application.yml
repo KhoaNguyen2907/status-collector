@@ -4,6 +4,7 @@ logging:
   level:
     ROOT: INFO
     org.spring.framework.cloud.config: DEBUG
+
 spring:
   application:
     name: configserver
@@ -11,7 +12,14 @@ spring:
     config:
       server:
         git:
-          uri: file:///Users/khoanguyen/GitHub/status-collector/config-server-repository/
+          uri: https://github.com/KhoaNguyen2907/status-collector-config-repository.git
           clone-on-start: true
           default-label: master
+          username: ndkhoalk97@gmail.com
+          password: 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
     fail-fast: true
+
+  security:
+    user:
+      name: devkhoa
+      password: devkhoa_password
