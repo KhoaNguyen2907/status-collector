@@ -4,10 +4,12 @@ spring:
   profiles:
     active: status_fetcher
   config:
-    import: configserver:http://localhost:8888/
+    import: optional:configserver:${SPRING_CONFIG_IMPORT_URI:http://localhost:8888/}
   cloud:
     config:
-      name: status-fetcher,config-client
+      name: config-client
       username: devkhoa
-      password: devkhoa_password
+      password: '{cipher}8997f5ba338c140673bd23e3579f84871b47cfffee03da3de6167acdaed8fdb60660754222b7b8f218da17f29f490809'
 
+encrypt:
+  key: ${ENCRYPT_KEY}

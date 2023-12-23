@@ -60,27 +60,14 @@
 
     </dependencies>
 
+
     <build>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <image>
-                        <name>${project.groupId}/status-fetcher:${project.version}</name>
-                    </image>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase> install </phase>
-                        <goals>
-                            <goal>build-image</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
-
 
 </project>

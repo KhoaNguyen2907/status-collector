@@ -16,10 +16,12 @@ spring:
           clone-on-start: true
           default-label: master
           username: ndkhoalk97@gmail.com
-          password: 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
+          password: '{cipher}e2075908c90aab1d098dad36b308c2d6a3db1ba335fbb2f5d7e4392c9d854de2e89fb5ba25272c92215b3de913f61f3745443f933e552170a7763263cd3a697bc65b30f5a2522a5c74d6fc5f7d7d7b7442489ac08953925a561a4533220e17bfa71b3899357083d1fc38db67de600af3'
     fail-fast: true
 
   security:
     user:
       name: devkhoa
-      password: devkhoa_password
+      password: '{cipher}8997f5ba338c140673bd23e3579f84871b47cfffee03da3de6167acdaed8fdb60660754222b7b8f218da17f29f490809'
+encrypt:
+  key: ${ENCRYPT_KEY}

@@ -1,4 +1,4 @@
-version: '3.7'
+version: '2'
 services:
   status-fetcher:
     image: ${GROUP_ID}/status-fetcher:${STATUS_FETCHER_VERSION:-latest}
@@ -10,7 +10,30 @@ services:
       - "KAFKA-CONFIG_TOPIC-NAME=status-topic"
       - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092"
       - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+      - "SPRING_CONFIG_IMPORT_URI=http://config-server:8888/"
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xms128m -Xmx256m"
+
     depends_on:
-      - schema-registry
+#      - schema-registry
+      - config-server
+    restart: unless-stopped
     networks:
       - ${GLOBAL_NETWORK:-services}
+    cpus: 1
+
+
+
+  config-server:
+    image: ${GROUP_ID}/config-server:${CONFIG_SERVER_VERSION:-latest}
+    ports:
+      - "5006:5006"
+    volumes:
+      - "./docker-logs:/workspace/config-server/logs"
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xms128m -Xmx256m"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+    cpus:
+      1
