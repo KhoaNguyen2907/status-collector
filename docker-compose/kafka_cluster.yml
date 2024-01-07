@@ -21,7 +21,7 @@ services:
       - zookeeper
       - kafka-broker-1
       - kafka-broker-2
-#      - kafka-broker-3
+      - kafka-broker-3
     ports:
       - "8081:8081"
     environment:
@@ -29,6 +29,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
       SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
       SCHEMA_REGISTRY_DEBUG: 'true'
+    restart: unless-stopped
     networks:
       - ${GLOBAL_NETWORK:-kafka}
   kafka-broker-1:
@@ -45,6 +46,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,LISTENER_LOCAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_COMPRESSION_TYPE: producer
+    mem_limit: 1g
     networks:
       - ${GLOBAL_NETWORK:-kafka}
   kafka-broker-2:
@@ -61,21 +63,23 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,LISTENER_LOCAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_COMPRESSION_TYPE: producer
+    mem_limit: 1g
     networks:
       - ${GLOBAL_NETWORK:-kafka}
-#  kafka-broker-3:
-#    image: confluentinc/cp-kafka:${KAFKA_VERSION}
-#    hostname: kafka-broker-3
-#    ports:
-#      - "39092:39092"
-#    depends_on:
-#      - zookeeper
-#    environment:
-#      KAFKA_BROKER_ID: 3
-#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-3:9092,LISTENER_LOCAL://localhost:39092
-#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,LISTENER_LOCAL:PLAINTEXT
-#      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-#      KAFKA_COMPRESSION_TYPE: producer
-#    networks:
-#      - ${GLOBAL_NETWORK:-kafka}
+  kafka-broker-3:
+    image: confluentinc/cp-kafka:${KAFKA_VERSION}
+    hostname: kafka-broker-3
+    ports:
+      - "39092:39092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-3:9092,LISTENER_LOCAL://localhost:39092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,LISTENER_LOCAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_COMPRESSION_TYPE: producer
+    mem_limit: 1g
+    networks:
+      - ${GLOBAL_NETWORK:-kafka}

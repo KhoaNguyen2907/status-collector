@@ -1,5 +1,17 @@
 version: '2'
 services:
+  config-server:
+    image: ${GROUP_ID}/config-server:${CONFIG_SERVER_VERSION:-latest}
+    ports:
+      - "8888:8888"
+    volumes:
+      - "./docker-logs:/workspace/config-server/logs"
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xms128m -Xmx256m"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+
   status-fetcher:
     image: ${GROUP_ID}/status-fetcher:${STATUS_FETCHER_VERSION:-latest}
     ports:
@@ -8,32 +20,42 @@ services:
       - "./docker-logs:/workspace/status-fetcher/logs"
     environment:
       - "KAFKA-CONFIG_TOPIC-NAME=status-topic"
-      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
       - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
       - "SPRING_CONFIG_IMPORT_URI=http://config-server:8888/"
-      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xms128m -Xmx256m"
-
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
     depends_on:
-#      - schema-registry
       - config-server
+      - kafka-broker-1
+      - kafka-broker-2
+      - kafka-broker-3
     restart: unless-stopped
     networks:
       - ${GLOBAL_NETWORK:-services}
-    cpus: 1
 
-
-
-  config-server:
-    image: ${GROUP_ID}/config-server:${CONFIG_SERVER_VERSION:-latest}
+  status-loader:
+    image: ${GROUP_ID}/status-loader:${STATUS_LOADER_VERSION:-latest}
     ports:
       - "5006:5006"
     volumes:
-      - "./docker-logs:/workspace/config-server/logs"
+      - "./docker-logs:/workspace/status-loader/logs"
     environment:
-      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xms128m -Xmx256m"
+      - "ELASTIC-SEARCH-CONFIG_INDEX-NAME=status-index"
+      - "ELASTIC-SEARCH-CONFIG_CONNECTION-URL=http://172.20.0.5:9200"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
+      - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+      - "SPRING_CONFIG_IMPORT_URI=http://config-server:8888/"
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006"
+    depends_on:
+      - config-server
+      - kafka-broker-1
+      - kafka-broker-2
+      - kafka-broker-3
+      - elastic-1
+      - elastic-2
+      - elastic-3
+    restart: unless-stopped
     networks:
       - ${GLOBAL_NETWORK:-services}
-    cpus:
-      1

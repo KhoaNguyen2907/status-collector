@@ -8,6 +8,8 @@
         <module>kafka</module>
         <module>app-common-config</module>
         <module>config-server</module>
+        <module>status-loader</module>
+        <module>elastic-search</module>
     </modules>
 
     <groupId>com.devkhoa</groupId>
@@ -29,6 +31,8 @@
         <spring-cloud.version>2.2.6.RELEASE</spring-cloud.version>
         <spring-cloud-dependencies.version>2021.0.3</spring-cloud-dependencies.version>
         <jackson.version>2.14.2</jackson.version>
+        <elastic.version>8.11.3</elastic.version>
+
     </properties>
 
     <repositories>
@@ -67,7 +71,31 @@
 
             <dependency>
                 <groupId>com.devkhoa</groupId>
+                <artifactId>kafka-consumer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.devkhoa</groupId>
                 <artifactId>kafka-admin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.devkhoa</groupId>
+                <artifactId>elastic-search-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.devkhoa</groupId>
+                <artifactId>elastic-search-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.devkhoa</groupId>
+                <artifactId>elastic-search-index-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -165,6 +193,19 @@
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>co.elastic.clients</groupId>
+                <artifactId>elasticsearch-java</artifactId>
+                <version>${elastic.version}</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>

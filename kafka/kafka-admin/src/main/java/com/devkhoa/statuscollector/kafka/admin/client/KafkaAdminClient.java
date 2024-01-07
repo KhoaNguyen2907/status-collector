@@ -82,7 +82,7 @@ public class KafkaAdminClient {
     }
 
 
-    private boolean checkTopicsCreated(RetryContext retryContext) throws ExecutionException, InterruptedException {
+    public boolean checkTopicsCreated(RetryContext retryContext) throws ExecutionException, InterruptedException {
         List<TopicListing> topics = getTopic();
         logger.info("Created topics: {}", topics);
         for (String topicNeedToCreate : kafkaConfigData.getTopicNamesToCreate()) {
