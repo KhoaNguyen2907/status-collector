@@ -10,6 +10,7 @@
         <module>config-server</module>
         <module>status-loader</module>
         <module>elastic-search</module>
+        <module>status-retriever</module>
     </modules>
 
     <groupId>com.devkhoa</groupId>

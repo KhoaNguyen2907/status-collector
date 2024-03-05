@@ -16,7 +16,8 @@ spring:
           clone-on-start: true
           default-label: master
           username: ndkhoalk97@gmail.com
-          password: '{cipher}e2075908c90aab1d098dad36b308c2d6a3db1ba335fbb2f5d7e4392c9d854de2e89fb5ba25272c92215b3de913f61f3745443f933e552170a7763263cd3a697bc65b30f5a2522a5c74d6fc5f7d7d7b7442489ac08953925a561a4533220e17bfa71b3899357083d1fc38db67de600af3'
+          #this personal github password may be expired
+          password: '{cipher}8bba07203fca36089347fc570a8acf586022a9625757945afac9b6b1c3ede2634cbe353f1fdfb67ff858532e4dda53c572ef79ad9dae8175f17d21975d394f01a2e68675c321c0708644338e8123b97e02d348958c7a55d274e044c2bd07083c2d375b213685af4df017b31a2501dcc2'
     fail-fast: true
 
   security:

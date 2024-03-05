@@ -18,6 +18,10 @@ services:
       - "5005:5005"
     volumes:
       - "./docker-logs:/workspace/status-fetcher/logs"
+      - "./script:/usr/local/bin"  # Mount the directory containing your script
+
+    entrypoint: ["check-config-server-kafka.sh"]  # Execute the script
+
     environment:
       - "KAFKA-CONFIG_TOPIC-NAME=status-topic"
       - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
@@ -27,10 +31,7 @@ services:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
     depends_on:
       - config-server
-      - kafka-broker-1
-      - kafka-broker-2
-      - kafka-broker-3
-    restart: unless-stopped
+#    restart: unless-stopped
     networks:
       - ${GLOBAL_NETWORK:-services}
 
@@ -40,6 +41,9 @@ services:
       - "5006:5006"
     volumes:
       - "./docker-logs:/workspace/status-loader/logs"
+      - "./script:/usr/local/bin"  # Mount the directory containing your script
+
+    entrypoint: [ "check-config-server-kafka.sh" ]  # Execute the script
     environment:
       - "ELASTIC-SEARCH-CONFIG_INDEX-NAME=status-index"
       - "ELASTIC-SEARCH-CONFIG_CONNECTION-URL=http://172.20.0.5:9200"
@@ -50,12 +54,5 @@ services:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006"
     depends_on:
       - config-server
-      - kafka-broker-1
-      - kafka-broker-2
-      - kafka-broker-3
-      - elastic-1
-      - elastic-2
-      - elastic-3
-    restart: unless-stopped
     networks:
       - ${GLOBAL_NETWORK:-services}

@@ -22,6 +22,10 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * This class is responsible for simulating a stream of statuses.
+ * It is only active when the property "status-fetcher.enable-mock-status" is set to true.
+ */
 @Component
 @ConditionalOnProperty(name = "status-fetcher.enable-mock-status", havingValue = "true")
 public class MockStreamRunner implements StreamRunner {
@@ -62,6 +66,9 @@ public class MockStreamRunner implements StreamRunner {
         this.mapper = mapper;
     }
 
+    /**
+     * Starts the simulation of the status stream.
+     */
     @Override
     public void start() {
         String[] keywords = configData.getStatusKeywords().toArray(new String [0]);
@@ -73,6 +80,13 @@ public class MockStreamRunner implements StreamRunner {
         simulateStatusStream(keywords, minStatusLength, maxStatusLength, sleepTimeMs);
     }
 
+    /**
+     * Simulates a stream of statuses.
+     * @param keywords Keywords to include in the statuses.
+     * @param minStatusLength Minimum length of a status.
+     * @param maxStatusLength Maximum length of a status.
+     * @param sleepTimeMs Time to sleep between statuses.
+     */
     private void simulateStatusStream(String[] keywords, int minStatusLength, int maxStatusLength, long sleepTimeMs) {
         Executors.newSingleThreadExecutor().submit(() -> {
             try {
@@ -88,6 +102,10 @@ public class MockStreamRunner implements StreamRunner {
         });
     }
 
+    /**
+     * Sleeps for a specified amount of time.
+     * @param sleepTimeMs Time to sleep in milliseconds.
+     */
     private void sleep(long sleepTimeMs) {
         try {
             Thread.sleep(sleepTimeMs);
@@ -96,6 +114,13 @@ public class MockStreamRunner implements StreamRunner {
         }
     }
 
+    /**
+     * Generates a JSON formatted status.
+     * @param keywords Keywords to include in the status.
+     * @param minStatusLength Minimum length of the status.
+     * @param maxStatusLength Maximum length of the status.
+     * @return The status as a JSON string.
+     */
     private String getJsonFormattedStatus(String[] keywords, int minStatusLength, int maxStatusLength) {
         String statusDateFormat = "MMM dd yyyy HH:mm:ss ";
         String[] params = new String[]{
@@ -107,13 +132,18 @@ public class MockStreamRunner implements StreamRunner {
         return formatStatusAsJsonWithParams(params);
     }
 
+    /**
+     * Formats a status as a JSON string.
+     * @param params Parameters to include in the status.
+     * @return The status as a JSON string.
+     */
     private String formatStatusAsJsonWithParams(String[] params) {
         String status = "{" +
-                    "\"created_at\":\"{0}\"," +
-                    "\"id\":\"{1}\"," +
-                    "\"text\":\"{2}\"," +
-                    "\"user\":{\"id\":\"{3}\"}" +
-                    "}";
+                "\"created_at\":\"{0}\"," +
+                "\"id\":\"{1}\"," +
+                "\"text\":\"{2}\"," +
+                "\"user\":{\"id\":\"{3}\"}" +
+                "}";
 
         for (int i = 0; i < params.length; i++) {
             status = status.replace("{" + i + "}", params[i]);
@@ -121,12 +151,26 @@ public class MockStreamRunner implements StreamRunner {
         return status;
     }
 
+    /**
+     * Generates a random status content.
+     * @param keywords Keywords to include in the status.
+     * @param minStatusLength Minimum length of the status.
+     * @param maxStatusLength Maximum length of the status.
+     * @return The status content as a string.
+     */
     private String getRandomStatusContent(String[] keywords, int minStatusLength, int maxStatusLength) {
         StringBuilder content = new StringBuilder();
         int statusLength = random.nextInt(maxStatusLength - minStatusLength + 1) + minStatusLength;
         return constructRandomStatus(keywords, content, statusLength);
     }
 
+    /**
+     * Constructs a random status content.
+     * @param keywords Keywords to include in the status.
+     * @param content StringBuilder to build the status content.
+     * @param statusLength Length of the status.
+     * @return The status content as a string.
+     */
     private String constructRandomStatus(String[] keywords, StringBuilder content, int statusLength) {
         for (int i = 0; i < statusLength; i++) {
             content.append(words[random.nextInt(words.length)]).append(" ");

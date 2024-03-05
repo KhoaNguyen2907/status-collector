@@ -15,12 +15,16 @@ import org.springframework.retry.RetryContext;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+/**
+ * KafkaAdminClient is a component that handles Kafka administrative tasks such as creating topics and checking the status of the Schema Registry.
+ */
 @Component
 public class KafkaAdminClient {
     private final KafkaConfigData kafkaConfigData;
@@ -38,6 +42,9 @@ public class KafkaAdminClient {
         this.webClient = webClient;
     }
 
+    /**
+     * Creates topics in Kafka.
+     */
     public void createTopics(){
         try {
             CreateTopicsResult createTopicsResult = retryTemplate.execute(this::doCreateTopics);
@@ -49,6 +56,9 @@ public class KafkaAdminClient {
         }
     }
 
+    /**
+     * Checks the status of the Schema Registry.
+     */
     public void checkSchemaRegistry() {
         retryTemplate.execute(retryContext -> {
             HttpStatus status = getSchemaRegistryStatus();
@@ -59,6 +69,10 @@ public class KafkaAdminClient {
         });
     }
 
+    /**
+     * Gets the status of the Schema Registry.
+     * @return The HTTP status of the Schema Registry.
+     */
     private HttpStatus getSchemaRegistryStatus() {
         try {
             return webClient
@@ -66,13 +80,17 @@ public class KafkaAdminClient {
                     .uri(kafkaConfigData.getSchemaRegistryUrl())
                     .exchange()
                     .map(r -> r.statusCode())
-//                    .exchangeToMono(response -> Mono.just(response.statusCode()))
                     .block();
         } catch (Exception e) {
             return HttpStatus.SERVICE_UNAVAILABLE;
         }
     }
 
+    /**
+     * Creates topics in Kafka.
+     * @param retryContext The context for the retry operation.
+     * @return The result of the topic creation operation.
+     */
     private CreateTopicsResult doCreateTopics(RetryContext retryContext) {
         List<String> topicNames = kafkaConfigData.getTopicNamesToCreate();
         List<NewTopic> topics = topicNames.stream()
@@ -81,7 +99,13 @@ public class KafkaAdminClient {
         return adminClient.createTopics(topics);
     }
 
-
+    /**
+     * Checks if all topics have been created.
+     * @param retryContext The context for the retry operation.
+     * @return True if all topics have been created, false otherwise.
+     * @throws ExecutionException If an exception occurs during the execution of the task.
+     * @throws InterruptedException If the current thread is interrupted while waiting.
+     */
     public boolean checkTopicsCreated(RetryContext retryContext) throws ExecutionException, InterruptedException {
         List<TopicListing> topics = getTopic();
         logger.info("Created topics: {}", topics);
@@ -93,10 +117,22 @@ public class KafkaAdminClient {
         return true;
     }
 
+    /**
+     * Checks if a topic has been created.
+     * @param topicNeedToCreate The name of the topic to check.
+     * @param topics The list of existing topics.
+     * @return True if the topic has been created, false otherwise.
+     */
     private boolean isTopicCreated(String topicNeedToCreate, List<TopicListing> topics) {
-       return topics.stream().anyMatch(topicListing -> topicListing.name().equalsIgnoreCase(topicNeedToCreate));
+        return topics.stream().anyMatch(topicListing -> topicListing.name().equalsIgnoreCase(topicNeedToCreate));
     }
 
+    /**
+     * Gets a list of all topics.
+     * @return A list of all topics.
+     * @throws ExecutionException If an exception occurs during the execution of the task.
+     * @throws InterruptedException If the current thread is interrupted while waiting.
+     */
     private List<TopicListing> getTopic() throws ExecutionException, InterruptedException {
         return new ArrayList<>(adminClient.listTopics().listings().get());
     }

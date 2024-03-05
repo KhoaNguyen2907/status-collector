@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
 
@@ -12,6 +13,7 @@ import java.net.URL;
 import java.util.Objects;
 
 @Configuration
+@ComponentScan(basePackages = "com.devkhoa.statuscollector")
 public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
     public final ElasticSearchConfigData elasticSearchConfigData;
 

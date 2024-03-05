@@ -1,9 +1,11 @@
 #!/bin/bash
-# check-config-server-started.sh
+# check-config-server-kafka.sh
 
-apt-get update -y
+#apt-get update -y
 
-yes | apt-get install curl
+#yes | apt-get install curl
+
+echo "Checking config server!"
 
 curlResult=$(curl -s -o /dev/null -I -w "%{http_code}" http://config-server:8888/actuator/health)
 
@@ -15,4 +17,4 @@ while [[ ! $curlResult == "200" ]]; do
   curlResult=$(curl -s -o /dev/null -I -w "%{http_code}" http://config-server:8888/actuator/health)
 done
 
-./cnb/lifecycle/launcher
+check-kafka.sh

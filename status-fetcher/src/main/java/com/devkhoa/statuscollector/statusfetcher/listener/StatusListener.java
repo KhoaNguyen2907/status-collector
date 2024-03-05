@@ -9,6 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * This component listens for new Status events and publishes them to a Kafka topic.
+ */
 @Component
 public class StatusListener {
     private final Logger logger = LoggerFactory.getLogger(StatusListener.class);
@@ -22,6 +25,12 @@ public class StatusListener {
         this.converter = converter;
     }
 
+    /**
+     * This method is triggered when a new Status event occurs.
+     * It logs the status text, converts the Status to a StatusAvroModel, and sends it to the Kafka topic.
+     *
+     * @param status The new Status event.
+     */
     public void onStatus(Status status){
         logger.info("Status with text: " + status.getText());
         StatusAvroModel model = converter.getStatusAvroModel(status);

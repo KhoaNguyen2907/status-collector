@@ -1,4 +1,4 @@
-package com.devkhoa.statuscollector;
+package com.devkhoa.statuscollector.statusloader;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
