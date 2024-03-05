@@ -13,8 +13,10 @@ services:
       ZOOKEEPER_INIT_LIMIT: 5
       ZOOKEEPER_SYNC_LIMIT: 2
       ZOOKEEPER_SERVERS: zookeeper:2888:3888
+    restart: unless-stopped
     networks:
       - ${GLOBAL_NETWORK:-kafka}
+
   schema-registry:
     image: confluentinc/cp-schema-registry:${KAFKA_VERSION}
     hostname: schema-registry
@@ -35,6 +37,7 @@ services:
     restart: unless-stopped
     networks:
       - ${GLOBAL_NETWORK:-kafka}
+
   kafka-broker-1:
     image: confluentinc/cp-kafka:${KAFKA_VERSION}
     hostname: kafka-broker-1
@@ -51,8 +54,10 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_COMPRESSION_TYPE: producer
     mem_limit: 1g
+    restart: unless-stopped
     networks:
       - ${GLOBAL_NETWORK:-kafka}
+
   kafka-broker-2:
     image: confluentinc/cp-kafka:${KAFKA_VERSION}
     hostname: kafka-broker-2
@@ -69,8 +74,10 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_COMPRESSION_TYPE: producer
     mem_limit: 1g
+    restart: unless-stopped
     networks:
       - ${GLOBAL_NETWORK:-kafka}
+
   kafka-broker-3:
     image: confluentinc/cp-kafka:${KAFKA_VERSION}
     hostname: kafka-broker-3
@@ -87,5 +94,6 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_COMPRESSION_TYPE: producer
     mem_limit: 1g
+    restart: unless-stopped
     networks:
       - ${GLOBAL_NETWORK:-kafka}

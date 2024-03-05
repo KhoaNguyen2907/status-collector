@@ -31,7 +31,7 @@ services:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
     depends_on:
       - config-server
-#    restart: unless-stopped
+    restart: unless-stopped
     networks:
       - ${GLOBAL_NETWORK:-services}
 
@@ -54,5 +54,6 @@ services:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006"
     depends_on:
       - config-server
+    restart: unless-stopped
     networks:
       - ${GLOBAL_NETWORK:-services}
