@@ -69,7 +69,7 @@ public class StatusElasticSearchQueryClient implements ElasticSearchQueryClient<
     @Override
     public List<StatusIndexModel> getAllIndexModels() {
         Query query = util.getSearchQueryForAll();
-        return search(query, "Number result: {}" );
+        return search(query, "Number result: {} {}" ,"" );
     }
 
     /**
@@ -82,6 +82,7 @@ public class StatusElasticSearchQueryClient implements ElasticSearchQueryClient<
     private List<StatusIndexModel> search(Query query, String logMessage, String... logParams) {
         LOG.info("Executing search query index: {} ", queryConfigData.getIndexName());
         SearchHits<StatusIndexModel> searchResult = elasticsearchOperations.search(query, StatusIndexModel.class, IndexCoordinates.of(queryConfigData.getIndexName()));
+
         LOG.info(logMessage, logParams, searchResult.getTotalHits());
         return searchResult.get().map(SearchHit::getContent).collect(Collectors.toList());
     }
