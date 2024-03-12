@@ -4,6 +4,7 @@ import com.devkhoa.statuscollector.elasticsearch.model.index.IndexModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -14,6 +15,7 @@ import java.time.ZonedDateTime;
 
 @Document(indexName = "#{elasticSearchConfigData.indexName}")
 @Builder
+@Data
 public class StatusIndexModel implements IndexModel {
 
     @JsonProperty

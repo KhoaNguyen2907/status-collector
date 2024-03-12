@@ -4,10 +4,13 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @Configuration
-@ConfigurationProperties(prefix = "elastic-search-query-config")
+@ConfigurationProperties(prefix = "user-config")
 @Data
-public class ElasticSearchQueryConfigData {
-    private String indexName;
-    private String textField;
+public class InMemoryUserConfigData {
+    private String username;
+    private String password;
+    private List<String> roles;
 }
