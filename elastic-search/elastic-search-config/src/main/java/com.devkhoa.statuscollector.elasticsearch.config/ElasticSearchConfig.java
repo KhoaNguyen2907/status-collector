@@ -5,16 +5,19 @@ import lombok.SneakyThrows;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 
 import java.net.URL;
 import java.util.Objects;
 
 @Configuration
 @ComponentScan(basePackages = "com.devkhoa.statuscollector")
-public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
+public class ElasticSearchConfig {
     public final ElasticSearchConfigData elasticSearchConfigData;
 
     public ElasticSearchConfig(ElasticSearchConfigData elasticSearchConfigData) {
@@ -22,7 +25,6 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
     }
 
     @SneakyThrows
-    @Override
     public RestHighLevelClient elasticsearchClient() {
         URL serverUri = new URL(elasticSearchConfigData.getConnectionUrl());
         return new RestHighLevelClient(
@@ -35,4 +37,9 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
                 )
         );
     }
+    @Bean
+    public ElasticsearchOperations elasticsearchTemplate() {
+        return new ElasticsearchRestTemplate(elasticsearchClient());
+    }
+
 }

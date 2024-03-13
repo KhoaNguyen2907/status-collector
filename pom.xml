@@ -33,6 +33,7 @@
         <spring-cloud-dependencies.version>2021.0.3</spring-cloud-dependencies.version>
         <jackson.version>2.14.2</jackson.version>
         <elastic.version>8.11.3</elastic.version>
+        <springdoc-openapi-ui>1.5.12</springdoc-openapi-ui>
 
     </properties>
 
@@ -151,6 +152,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-hateoas</artifactId>
                 <version>${spring-boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-ui</artifactId>
+                <version>${springdoc-openapi-ui}</version>
             </dependency>
 
             <dependency>

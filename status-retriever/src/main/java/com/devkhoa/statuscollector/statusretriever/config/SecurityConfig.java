@@ -1,6 +1,8 @@
 package com.devkhoa.statuscollector.statusretriever.config;
 
 import com.devkhoa.statuscollector.configdata.InMemoryUserConfigData;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +19,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final InMemoryUserConfigData inMemoryUserConfigData;
+//    @Value("${security.paths-to-ignore}")
+    private  String[] pathsToIgnore = {"/api-docs/**", "/swagger-ui/**", "/swagger-ui.html"};
 
     public SecurityConfig(InMemoryUserConfigData inMemoryUserConfigData) {
         this.inMemoryUserConfigData = inMemoryUserConfigData;
@@ -25,6 +29,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
+                        .antMatchers(pathsToIgnore).permitAll()
                         .antMatchers("/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )

@@ -1,5 +1,6 @@
 package com.devkhoa.statuscollector.elasticsearch.queryclient.service.impl;
 
+import com.devkhoa.statuscollector.configdata.ElasticSearchConfigData;
 import com.devkhoa.statuscollector.configdata.ElasticSearchQueryConfigData;
 import com.devkhoa.statuscollector.elasticsearch.model.index.impl.StatusIndexModel;
 import com.devkhoa.statuscollector.elasticsearch.queryclient.exception.ElasticQueryException;
@@ -25,7 +26,6 @@ public class StatusElasticSearchQueryClient implements ElasticSearchQueryClient<
     private final ElasticsearchOperations elasticsearchOperations;
     private final ElasticSearchQueryUtil<StatusIndexModel> util;
     private final ElasticSearchQueryConfigData queryConfigData;
-
 
     private final Logger LOG = LoggerFactory.getLogger(StatusElasticSearchQueryClient.class);
 
@@ -81,6 +81,7 @@ public class StatusElasticSearchQueryClient implements ElasticSearchQueryClient<
      */
     private List<StatusIndexModel> search(Query query, String logMessage, String... logParams) {
         LOG.info("Executing search query index: {} ", queryConfigData.getIndexName());
+        //host
         SearchHits<StatusIndexModel> searchResult = elasticsearchOperations.search(query, StatusIndexModel.class, IndexCoordinates.of(queryConfigData.getIndexName()));
 
         LOG.info(logMessage, logParams, searchResult.getTotalHits());

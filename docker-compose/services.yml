@@ -17,11 +17,9 @@ services:
     ports:
       - "5005:5005"
     volumes:
-      - "./docker-logs:/workspace/status-fetcher/logs"
+      - "./docker-logs/status-fetcher:/workspace/status-fetcher/logs"
       - "./script:/usr/local/bin"  # Mount the directory containing your script
-
     entrypoint: ["check-config-server-kafka.sh"]  # Execute the script
-
     environment:
       - "KAFKA-CONFIG_TOPIC-NAME=status-topic"
       - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
@@ -40,13 +38,12 @@ services:
     ports:
       - "5006:5006"
     volumes:
-      - "./docker-logs:/workspace/status-loader/logs"
+      - "./docker-logs/status-loader:/workspace/status-loader/logs"
       - "./script:/usr/local/bin"  # Mount the directory containing your script
-
     entrypoint: [ "check-config-server-kafka.sh" ]  # Execute the script
     environment:
       - "ELASTIC-SEARCH-CONFIG_INDEX-NAME=status-index"
-      - "ELASTIC-SEARCH-CONFIG_CONNECTION-URL=http://172.20.0.5:9200"
+      - "ELASTIC-SEARCH-CONFIG_CONNECTION-URL=http://elastic-1:9200"
       - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
       - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
@@ -54,6 +51,30 @@ services:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006"
     depends_on:
       - config-server
+    restart: unless-stopped
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+
+  status-retriever:
+    image: ${GROUP_ID}/status-retriever:${STATUS_RETRIEVER_VERSION:-latest}
+    ports:
+      - "5007:5007"
+      - "8183:8183"
+    volumes:
+      - "./docker-logs/status-retriever:/workspace/status-retriever/logs"
+      - "./script:/usr/local/bin"  # Mount the directory containing your script
+    entrypoint: [ "check-config-server-elastic.sh" ]  # Execute the script
+    environment:
+      - "ELASTIC-SEARCH-CONFIG_INDEX-NAME=status-index"
+      - "ELASTIC-SEARCH-CONFIG_CONNECTION-URL=http://elastic-1:9200"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+      - "SPRING_CONFIG_IMPORT_URI=http://config-server:8888/"
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5007"
+    depends_on:
+      - config-server
+      - elastic-1
+      - elastic-2
+      - elastic-3
     restart: unless-stopped
     networks:
       - ${GLOBAL_NETWORK:-services}

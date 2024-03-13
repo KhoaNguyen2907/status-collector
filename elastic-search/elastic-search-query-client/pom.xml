@@ -27,6 +27,10 @@
         </dependency>
         <dependency>
             <groupId>com.devkhoa</groupId>
+            <artifactId>elastic-search-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.devkhoa</groupId>
             <artifactId>app-config-data</artifactId>
         </dependency>
     </dependencies>

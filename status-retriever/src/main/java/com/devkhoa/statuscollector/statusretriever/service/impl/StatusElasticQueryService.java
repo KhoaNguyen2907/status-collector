@@ -17,7 +17,8 @@ import java.util.stream.Collectors;
 public class StatusElasticQueryService implements ElasticQueryService {
     private final ElasticSearchQueryClient<StatusIndexModel> queryClient;
     private final QueryResponseModelAssembler queryResponseModelAssembler;
-    public StatusElasticQueryService(ElasticSearchQueryConfigData elasticSearchQueryConfigData, RestHighLevelClient restHighLevelClient, ElasticSearchQueryClient<StatusIndexModel> queryClient, QueryResponseModelAssembler queryResponseModelAssembler) {
+
+    public StatusElasticQueryService(ElasticSearchQueryClient<StatusIndexModel> queryClient, QueryResponseModelAssembler queryResponseModelAssembler, ElasticSearchQueryConfigData elasticSearchQueryConfigData1, RestHighLevelClient restHighLevelClient1) {
         this.queryClient = queryClient;
         this.queryResponseModelAssembler = queryResponseModelAssembler;
     }
